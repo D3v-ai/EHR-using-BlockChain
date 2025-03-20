@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Record</title>
+</head>
+<body>
+    <h1>View Record</h1>
+    <form method="POST">
+        <label for="patient_address">Patient Address:</label><br>
+        <input type="text" id="patient_address" name="patient_address"><br><br>
+        <label for="record_index">Record Index:</label><br>
+        <input type="number" id="record_index" name="record_index"><br><br>
+        <input type="submit" value="View Record">
+    </form>
+    {% if data %}
+        <h2>Record Data:</h2>
+        <p>{{ data }}</p>
+        <p>Timestamp: {{ timestamp }}</p>
+    {% endif %}
+</body>
+</html>
