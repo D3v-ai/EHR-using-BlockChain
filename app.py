@@ -227,4 +227,4 @@ def authorize():
 # Add similar routes for revoke_provider and is_provider_authorized
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
