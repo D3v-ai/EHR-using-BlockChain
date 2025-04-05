@@ -41,6 +41,15 @@
             resize: vertical;
         }
 
+        input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
         input[type="submit"] {
             background-color: #007bff;
             color: white;
@@ -58,10 +67,43 @@
 </head>
 <body>
     <h1>Add Record</h1>
-    <form method="POST">
+    <form id="addRecordForm">
         <label for="data">Record Data:</label>
         <textarea id="data" name="data" rows="8" cols="50" placeholder="Enter record data here..."></textarea>
+        <label for="privateKey">Private Key:</label>
+        <input type="password" id="privateKey" name="privateKey" placeholder="Enter your private key">
         <input type="submit" value="Submit">
     </form>
+    <script>
+        document.getElementById('addRecordForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const data = document.getElementById('data').value;
+    const privateKey = document.getElementById('privateKey').value;
+
+    fetch('/add_record_submit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ record: data, privateKey: privateKey }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.tx_hash) {
+            alert('Record added successfully. Transaction Hash: ' + data.tx_hash);
+        } else if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert('An unexpected error occurred.');
+        }
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+});
+    </script>
 </body>
 </html>

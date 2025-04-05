@@ -31,7 +31,7 @@
             font-weight: bold;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -57,10 +57,43 @@
 </head>
 <body>
     <h1>Authorize Provider</h1>
-    <form method="POST">
-        <label for="provider_address">Provider Address:</label>
-        <input type="text" id="provider_address" name="provider_address" placeholder="Enter provider's Ethereum address...">
+    <form id="authorizeForm">
+        <label for="providerAddress">Provider Address:</label>
+        <input type="text" id="providerAddress" name="providerAddress" placeholder="Enter provider's Ethereum address...">
+        <label for="privateKey">Your Private Key:</label>
+        <input type="password" id="privateKey" name="privateKey" placeholder="Enter your private key...">
         <input type="submit" value="Authorize">
     </form>
+
+    <script>
+        document.getElementById('authorizeForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const providerAddress = document.getElementById('providerAddress').value;
+    const privateKey = document.getElementById('privateKey').value;
+
+    fetch('/authorize_provider_submit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ providerAddress: providerAddress, privateKey: privateKey }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.tx_hash) {
+            alert('Provider authorized successfully. Transaction Hash: ' + data.tx_hash);
+        } else if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert('An unexpected error occurred.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+});
+    </script>
 </body>
 </html>
